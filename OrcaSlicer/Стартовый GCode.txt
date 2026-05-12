@@ -1,0 +1,40 @@
+; Макрос начала печати
+; Если какой-то экструдер не используется, то ему передаётся температура 0
+PRINT_START_CLASSIC E0_TEMPERATURE={if is_extruder_used[0]}{nozzle_temperature_initial_layer[0]}{else}0{endif} E1_TEMPERATURE={if is_extruder_used[1]}{nozzle_temperature_initial_layer[1]}{else}0{endif} BED_TEMPERATURE={if is_extruder_used[0] && is_extruder_used[1]}{max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])}{elsif is_extruder_used[1]}{first_layer_bed_temperature[1]}{else}{first_layer_bed_temperature[0]}{endif} E0_PA={pressure_advance[0]} E0_PA_SMOOTH_TIME=0.04 E1_PA={pressure_advance[1]} E1_PA_SMOOTH_TIME=0.04
+
+;SET_GCODE_OFFSET Z=0.0 MOVE=1
+
+{if is_extruder_used[0]}
+T0
+G90
+M83
+G1 Z5 F6000
+G1 E-0.2 F800
+G1 X110 Y0 F6000
+G1 E2 F800
+
+; Prusa like cleaner below
+G1 Y0 X120 Z0.48 F4800
+G1 X40 E9 F1000 ; intro line
+G1 X80 E12.5 F1000 ; intro line
+G1 Z1 F6000
+G92 E0
+{endif}
+
+{if is_extruder_used[1]}
+T1
+G1 Z5 F6000
+G1 E-0.2 F800
+G1 X210 Y0 F6000
+G1 E2 F800
+
+; Prusa like cleaner below
+G1 Y0 X220 Z0.48 F4800
+G1 X300 E9 F1000 ; intro line
+G1 X260 E12.5 F1000 ; intro line
+G1 Z1 F6000
+G92 E0
+{endif}
+
+;Если надо
+;SET_GCODE_OFFSET Z=-0.027 MOVE=1
